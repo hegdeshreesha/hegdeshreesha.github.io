@@ -23,10 +23,13 @@
     ::-webkit-scrollbar-thumb { background: #15575c; border-radius: 3px; }
   </style>
 </head>
-<body class="bg-[#050d15] text-gray-300 antialiased">
+<body class="bg-[#050d15] text-gray-300 antialiased relative min-h-screen">
+  <div class="fixed inset-0 pointer-events-none z-0 flex items-center justify-center opacity-[0.06]">
+    <img src="Lumen_studio_logo.png" alt="" class="w-[500px] max-w-[80vw]" />
+  </div>
 
   <!-- NAV -->
-  <div class="max-w-5xl mx-auto px-6">
+  <div class="max-w-5xl mx-auto px-6 relative z-10">
     <div class="flex items-center justify-between py-4 border-b border-white/[0.04]">
       <a href="#" class="flex items-center gap-3 font-bold text-white">
         <img src="Lumen_studio_logo.png" alt="" class="h-6 w-auto" />
