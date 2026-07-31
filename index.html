@@ -1,1 +1,511 @@
-hello from shreesha
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lumen EDA Suite — GSPICE &amp; Lumen Circuit Studio</title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root { --color-primary: #22d3ee; --color-secondary: #2dd4bf; --color-accent: #14b8a6; }
+    * { scroll-behavior: smooth; }
+    body { font-family: 'Inter', sans-serif; }
+    code, pre { font-family: 'JetBrains Mono', monospace; }
+    .gradient-text { background: linear-gradient(135deg, #22d3ee, #2dd4bf); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+    .gradient-bg { background: linear-gradient(135deg, #0a1628, #050d15, #0a1628); }
+    .glow { box-shadow: 0 0 40px rgba(6, 182, 212, 0.1); }
+    .glow-card:hover { box-shadow: 0 0 60px rgba(6, 182, 212, 0.18); transform: translateY(-4px); }
+    .nav-blur { backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); }
+    .hero-gradient { background: radial-gradient(ellipse at 30% 20%, rgba(6,182,212,0.08) 0%, transparent 60%), radial-gradient(ellipse at 70% 80%, rgba(45,212,191,0.05) 0%, transparent 60%), #050d15; }
+    .circuit-line { stroke-dasharray: 1000; stroke-dashoffset: 1000; animation: drawLine 3s ease-in-out forwards; }
+    @keyframes drawLine { to { stroke-dashoffset: 0; } }
+    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+    .float-anim { animation: float 6s ease-in-out infinite; }
+    @keyframes pulse-glow { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+    .pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
+    .tab-btn.active { color: #22d3ee; border-bottom-color: #22d3ee; }
+    .tech-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); gap: 1rem; }
+    .stat-counter { font-variant-numeric: tabular-nums; }
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: #050d15; }
+    ::-webkit-scrollbar-thumb { background: #22d3ee; border-radius: 4px; }
+    .bg-noise { background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.02'/%3E%3C/svg%3E"); }
+  </style>
+</head>
+<body class="bg-[#050d15] text-gray-100 overflow-x-hidden">
+
+  <!-- ====== NAVBAR ====== -->
+  <nav id="navbar" class="fixed top-0 left-0 w-full z-50 transition-all duration-300 nav-blur bg-[#050d15]/80 border-b border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between h-16">
+      <a href="#" class="flex items-center gap-3 text-xl font-bold">
+        <img src="Lumen_studio_logo.png" alt="Lumen" class="h-8 w-auto" />
+        <span class="gradient-text">Lumen EDA</span>
+      </a>
+      <div class="hidden md:flex items-center gap-8 text-sm font-medium text-gray-300">
+        <a href="#features" class="hover:text-cyan-400 transition">Features</a>
+        <a href="#technology" class="hover:text-cyan-400 transition">Technology</a>
+        <a href="#comparison" class="hover:text-cyan-400 transition">Comparison</a>
+        <a href="#download" class="hover:text-cyan-400 transition">Download</a>
+        <a href="#roadmap" class="hover:text-cyan-400 transition">Roadmap</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="https://github.com/hegdeshreesha/GSPICE" target="_blank" class="text-gray-400 hover:text-white transition"><i class="fab fa-github text-lg"></i></a>
+        <a href="#contact" class="hidden sm:inline-flex items-center gap-2 px-4 py-2 rounded-full bg-cyan-600 hover:bg-cyan-500 text-white text-sm font-medium transition">Get Started <i class="fas fa-arrow-right text-xs"></i></a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero-gradient relative min-h-screen flex items-center overflow-hidden pt-16">
+    <div class="bg-noise absolute inset-0 pointer-events-none"></div>
+    <div class="absolute top-20 left-10 w-72 h-72 bg-cyan-500/10 rounded-full blur-3xl pulse-glow"></div>
+    <div class="absolute bottom-20 right-10 w-96 h-96 bg-white/5 rounded-full blur-3xl pulse-glow" style="animation-delay:1.5s"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-8">
+          <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium">
+            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+            v1.3 Academic Beta — Open Source
+          </div>
+          <h1 class="text-4xl sm:text-5xl lg:text-7xl font-black leading-tight">
+            <span class="text-white">The Next-Gen</span><br />
+            <span class="gradient-text">Circuit Simulation</span><br />
+            <span class="text-white">Platform</span>
+          </h1>
+          <p class="text-lg sm:text-xl text-gray-400 max-w-xl leading-relaxed">
+            GSPICE &amp; Lumen Circuit Studio — an open-source, parallel-accelerated SPICE engine 
+            with a full-featured EDA workbench. Built for modern analog, RF, and mixed-signal design.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <a href="#download" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-semibold transition shadow-lg shadow-cyan-500/25">
+              <i class="fas fa-download"></i> Download v1.3
+            </a>
+            <a href="#features" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200 font-semibold border border-white/10 transition">
+              <i class="fas fa-cubes"></i> Explore Features
+            </a>
+            <a href="https://github.com/hegdeshreesha/GSPICE" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 text-gray-200 font-semibold border border-white/10 transition">
+              <i class="fab fa-github"></i> GitHub
+            </a>
+          </div>
+          <div class="flex items-center gap-8 pt-4 text-sm text-gray-500">
+            <span class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-400"></i> Open Source</span>
+            <span class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-400"></i> Apache 2.0</span>
+            <span class="flex items-center gap-2"><i class="fas fa-check-circle text-emerald-400"></i> Cross-Platform</span>
+          </div>
+        </div>
+
+        <div class="hidden lg:flex justify-center relative">
+          <div class="relative w-96 h-96 float-anim">
+            <div class="absolute inset-0 rounded-3xl bg-gradient-to-br from-cyan-500/15 to-teal-500/15 blur-xl"></div>
+            <div class="relative w-full h-full rounded-3xl border border-white/10 bg-[#050d15]/60 backdrop-blur-sm p-6 flex flex-col items-center justify-center">
+              <svg viewBox="0 0 400 300" class="w-full h-auto">
+                <path d="M30 150 L100 150 L130 100 L170 200 L210 80 L250 180 L290 120 L330 160 L370 150" stroke="#22d3ee" stroke-width="2" fill="none" class="circuit-line" />
+                <path d="M30 190 L100 190 L130 140 L170 240 L210 120 L250 220 L290 160 L330 200 L370 190" stroke="#2dd4bf" stroke-width="1.5" fill="none" class="circuit-line" style="animation-delay:0.5s" opacity="0.6" />
+                <circle cx="30" cy="150" r="4" fill="#22d3ee" />
+                <circle cx="370" cy="150" r="4" fill="#2dd4bf" />
+                <circle cx="130" cy="100" r="3" fill="#14b8a6" />
+                <circle cx="210" cy="80" r="3" fill="#14b8a6" />
+                <circle cx="290" cy="120" r="3" fill="#14b8a6" />
+                <rect x="90" y="60" width="16" height="32" rx="2" fill="#22d3ee" opacity="0.3" />
+                <rect x="260" y="90" width="16" height="32" rx="2" fill="#2dd4bf" opacity="0.3" />
+                <text x="15" y="40" fill="#2dd4bf" font-size="10" font-family="monospace">.TRAN 1n 10u</text>
+                <text x="250" y="280" fill="#2dd4bf" font-size="10" font-family="monospace">.AC DEC 100 1k 1G</text>
+                <text x="100" y="130" fill="#14b8a6" font-size="8" font-family="monospace">Q1</text>
+                <text x="220" y="105" fill="#14b8a6" font-size="8" font-family="monospace">M1</text>
+              </svg>
+              <div class="mt-4 flex gap-8 text-center text-xs text-gray-500">
+                <div><span class="text-cyan-400 font-bold text-lg">15+</span><br/>Analysis Types</div>
+                <div><span class="text-teal-400 font-bold text-lg">16</span><br/>Threads</div>
+                <div><span class="text-cyan-400 font-bold text-lg">OSDI</span><br/>Verilog-A</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== STATS ====== -->
+  <section class="border-y border-white/5 bg-[#05101a]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+        <div class="space-y-1">
+          <div class="stat-counter text-3xl font-black text-cyan-400" data-target="15">0</div>
+          <div class="text-sm text-gray-500">Analysis Types</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stat-counter text-3xl font-black text-teal-300" data-target="16">0</div>
+          <div class="text-sm text-gray-500">Parallel Threads</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stat-counter text-3xl font-black text-cyan-400" data-target="100">0</div>
+          <div class="text-sm text-gray-500">KLU Speedup (x)</div>
+        </div>
+        <div class="space-y-1">
+          <div class="stat-counter text-3xl font-black text-teal-300" data-target="2">0</div>
+          <div class="text-sm text-gray-500">Projects Combined</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FEATURES ====== -->
+  <section id="features" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 space-y-4">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium">Why Lumen EDA?</span>
+        <h2 class="text-3xl sm:text-5xl font-black">Two Engines, One Vision</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">GSPICE delivers industrial-grade simulation speed, while Lumen Circuit Studio provides a complete schematic-to-layout EDA experience.</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex justify-center mb-12 border-b border-white/10">
+        <button class="tab-btn active px-6 py-3 text-sm font-medium border-b-2 border-transparent transition" data-tab="all">All</button>
+        <button class="tab-btn px-6 py-3 text-sm font-medium border-b-2 border-transparent transition" data-tab="gspice">GSPICE</button>
+        <button class="tab-btn px-6 py-3 text-sm font-medium border-b-2 border-transparent transition" data-tab="lumen">Lumen Studio</button>
+      </div>
+
+      <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6" id="featuresGrid">
+        <!-- Feature cards injected by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TECHNOLOGY ====== -->
+  <section id="technology" class="py-24 bg-[#05101a]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 space-y-4">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-900/30 border border-cyan-800/30 text-teal-300 text-sm font-medium">Under the Hood</span>
+        <h2 class="text-3xl sm:text-5xl font-black">Technology Stack</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Built with modern C++, scientific computing libraries, and a Python-native GUI framework.</p>
+      </div>
+      <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4"><i class="fab fa-cuttlefish text-cyan-400 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">C++17 Core</h3>
+          <p class="text-sm text-gray-400">Modern C++ with RAII, templates, and policy-based design for extensible device modeling.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center mb-4"><i class="fas fa-microchip text-teal-300 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">OpenMP Parallel</h3>
+          <p class="text-sm text-gray-400">Multi-threaded device evaluation and matrix stamping scaling up to 16 threads.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4"><i class="fas fa-calculator text-cyan-400 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">SuiteSparse/KLU</h3>
+          <p class="text-sm text-gray-400">Industry gold-standard sparse matrix solver for large circuit simulations.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center mb-4"><i class="fas fa-cube text-teal-300 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">OSDI / Verilog-A</h3>
+          <p class="text-sm text-gray-400">Native Open Simulation Device Interface host for BSIM4, PSP, HICUM models.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4"><i class="fab fa-python text-cyan-400 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">Python GUI</h3>
+          <p class="text-sm text-gray-400">Lumen Circuit Studio built in Python with PyQt6 for a responsive, cross-platform UX.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center mb-4"><i class="fas fa-wave-square text-teal-300 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">Harmonic Balance</h3>
+          <p class="text-sm text-gray-400">Advanced RF analysis with PSS, HB, PAC, PNOISE, and envelope following.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-cyan-500/10 flex items-center justify-center mb-4"><i class="fas fa-project-diagram text-cyan-400 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">KLayout Integration</h3>
+          <p class="text-sm text-gray-400">IHP SG13G2 PDK with PCells, DRC/LVS command flow, and GDS export.</p>
+        </div>
+        <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+          <div class="w-12 h-12 rounded-xl bg-teal-500/10 flex items-center justify-center mb-4"><i class="fas fa-chart-line text-teal-300 text-xl"></i></div>
+          <h3 class="font-semibold mb-2">Monte Carlo</h3>
+          <p class="text-sm text-gray-400">Deterministic Gaussian/uniform sampling with optional Latin-hypercube support.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== COMPARISON ====== -->
+  <section id="comparison" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 space-y-4">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-900/30 border border-cyan-800/30 text-teal-300 text-sm font-medium">How We Stack Up</span>
+        <h2 class="text-3xl sm:text-5xl font-black">GSPICE vs Industry</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Validated against Xyce and VACASK for accuracy. Built for the next generation.</p>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="border-b border-white/10 text-sm text-gray-400 uppercase tracking-wider">
+              <th class="py-4 pr-4">Feature</th>
+              <th class="py-4 px-4 text-cyan-400 font-bold">GSPICE</th>
+              <th class="py-4 px-4">Ngspice</th>
+              <th class="py-4 px-4">Xyce</th>
+              <th class="py-4 px-4">LTspice</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm" id="comparisonBody">
+            <!-- Injected by JS -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== DOWNLOAD ====== -->
+  <section id="download" class="py-24 bg-[#05101a]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 space-y-4">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-900/30 border border-cyan-800/30 text-teal-300 text-sm font-medium">Get Started</span>
+        <h2 class="text-3xl sm:text-5xl font-black">Download &amp; Quick Start</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">Clone the repo, build with CMake, and run your first simulation in minutes.</p>
+      </div>
+      <div class="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+        <div class="p-8 rounded-2xl border border-white/10 bg-[#05101a]/60 glow">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="w-10 h-10 rounded-xl bg-cyan-500/10 flex items-center justify-center"><i class="fas fa-bolt text-cyan-400"></i></span>
+            <h3 class="text-xl font-bold">GSPICE</h3>
+          </div>
+          <div class="space-y-3 mb-6">
+            <div class="flex items-start gap-3 text-sm text-gray-400">
+              <i class="fas fa-terminal text-cyan-400 mt-0.5"></i>
+              <code class="text-xs bg-white/5 px-3 py-2 rounded-lg w-full">git clone https://github.com/hegdeshreesha/GSPICE.git</code>
+            </div>
+            <div class="flex items-start gap-3 text-sm text-gray-400">
+              <i class="fas fa-cog text-cyan-400 mt-0.5"></i>
+              <code class="text-xs bg-white/5 px-3 py-2 rounded-lg w-full">cmake -S . -B build && cmake --build build --config Release</code>
+            </div>
+            <div class="flex items-start gap-3 text-sm text-gray-400">
+              <i class="fas fa-play text-cyan-400 mt-0.5"></i>
+              <code class="text-xs bg-white/5 px-3 py-2 rounded-lg w-full">gspice circuit.sp --threads 8</code>
+            </div>
+          </div>
+          <a href="https://github.com/hegdeshreesha/GSPICE/releases" target="_blank" class="inline-flex items-center gap-2 text-cyan-400 hover:text-cyan-300 text-sm font-medium transition">
+            <i class="fas fa-tag"></i> View Releases <i class="fas fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+        <div class="p-8 rounded-2xl border border-white/10 bg-[#05101a]/60 glow">
+          <div class="flex items-center gap-3 mb-6">
+            <span class="w-10 h-10 rounded-xl bg-teal-500/10 flex items-center justify-center"><i class="fas fa-pen-ruler text-teal-300"></i></span>
+            <h3 class="text-xl font-bold">Lumen Circuit Studio</h3>
+          </div>
+          <div class="space-y-3 mb-6">
+            <div class="flex items-start gap-3 text-sm text-gray-400">
+              <i class="fas fa-terminal text-teal-300 mt-0.5"></i>
+              <code class="text-xs bg-white/5 px-3 py-2 rounded-lg w-full">git clone https://github.com/hegdeshreesha/Lumen_Circuit_Studio.git</code>
+            </div>
+            <div class="flex items-start gap-3 text-sm text-gray-400">
+              <i class="fas fa-flask text-teal-300 mt-0.5"></i>
+              <code class="text-xs bg-white/5 px-3 py-2 rounded-lg w-full">.\scripts\bootstrap_dev.ps1</code>
+            </div>
+            <div class="flex items-start gap-3 text-sm text-gray-400">
+              <i class="fas fa-play text-teal-300 mt-0.5"></i>
+              <code class="text-xs bg-white/5 px-3 py-2 rounded-lg w-full">python -m lumen</code>
+            </div>
+          </div>
+          <a href="https://github.com/hegdeshreesha/Lumen_Circuit_Studio" target="_blank" class="inline-flex items-center gap-2 text-teal-300 hover:text-teal-200 text-sm font-medium transition">
+            <i class="fab fa-github"></i> Repository <i class="fas fa-arrow-right text-xs"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== ROADMAP ====== -->
+  <section id="roadmap" class="py-24 relative">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-16 space-y-4">
+        <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-900/30 border border-cyan-800/30 text-teal-300 text-sm font-medium">What's Next</span>
+        <h2 class="text-3xl sm:text-5xl font-black">Development Roadmap</h2>
+        <p class="text-gray-400 max-w-2xl mx-auto">From academic beta to production-grade signoff simulator.</p>
+      </div>
+      <div class="relative max-w-3xl mx-auto">
+        <div class="absolute left-6 top-0 bottom-0 w-px bg-gradient-to-b from-cyan-500 via-teal-500 to-transparent"></div>
+        <div class="space-y-12" id="roadmapItems">
+          <!-- Injected by JS -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CONTACT ====== -->
+  <section id="contact" class="py-24 bg-[#05101a]">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
+      <span class="inline-block px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-sm font-medium">Stay Connected</span>
+      <h2 class="text-3xl sm:text-5xl font-black">Get Involved</h2>
+      <p class="text-gray-400">Contributions, bug reports, and feature requests welcome. Star the repo, open an issue, or submit a PR.</p>
+      <div class="flex flex-wrap justify-center gap-4 pt-4">
+        <a href="https://github.com/hegdeshreesha/GSPICE" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 font-medium transition">
+          <i class="fab fa-github"></i> GSPICE Repo
+        </a>
+        <a href="https://github.com/hegdeshreesha/Lumen_Circuit_Studio" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 font-medium transition">
+          <i class="fab fa-github"></i> Lumen Repo
+        </a>
+        <a href="https://github.com/hegdeshreesha/GSPICE/issues" target="_blank" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-gray-200 font-medium transition">
+          <i class="fas fa-bug"></i> Report Issue
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="border-t border-white/5 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-gray-500">
+      <span>&copy; 2026 Lumen EDA. Released under Apache 2.0.</span>
+      <div class="flex items-center gap-4">
+        <a href="https://github.com/hegdeshreesha/GSPICE" target="_blank" class="hover:text-cyan-400 transition"><i class="fab fa-github"></i></a>
+        <a href="#" class="hover:text-cyan-400 transition">Privacy</a>
+        <a href="#" class="hover:text-cyan-400 transition">Terms</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // ====== Data ======
+    const features = [
+      { tab: 'gspice', icon: 'fa-bolt', title: 'Parallel Core', desc: 'Fully multi-threaded device evaluation and matrix stamping with OpenMP. Scales to 16 threads.', color: 'cyan' },
+      { tab: 'gspice', icon: 'fa-cube', title: 'OSDI / Verilog-A', desc: 'Native Open Simulation Device Interface host. Load BSIM4, PSP, and HICUM models dynamically.', color: 'cyan' },
+      { tab: 'gspice', icon: 'fa-wave-square', title: 'RF Analysis Suite', desc: 'PSS (shooting method), Harmonic Balance, S-Parameters, PAC, PNOISE, HBAC, HBNOISE.', color: 'cyan' },
+      { tab: 'gspice', icon: 'fa-calculator', title: 'SuiteSparse/KLU Solver', desc: 'Bridges to the industry gold-standard sparse matrix solver for large circuits.', color: 'cyan' },
+      { tab: 'gspice', icon: 'fa-chart-bar', title: '15+ Analysis Types', desc: 'OP, TRAN, AC, NOISE, PSS, HB, SP, PAC, PNOISE, STB, MC, DC sweeps, corners, and more.', color: 'cyan' },
+      { tab: 'gspice', icon: 'fa-random', title: 'Monte Carlo', desc: 'Deterministic Gaussian/uniform sampling with Latin-hypercube option.', color: 'cyan' },
+      { tab: 'gspice', icon: 'fa-sliders-h', title: 'Advanced Integration', desc: 'BDF through order 5, trap ringing damping, adaptive step/order, charge-aware LTE.', color: 'cyan' },
+      { tab: 'gspice', icon: 'fa-shield-alt', title: 'Industrial Stability', desc: 'G-min stepping, Newton-Raphson damping, verified against Level-50 industrial models.', color: 'cyan' },
+      { tab: 'lumen', icon: 'fa-pen-ruler', title: 'Schematic Editor', desc: 'Hierarchical capture with wire routing, instance placement, rotate/mirror, labels, pins.', color: 'teal' },
+      { tab: 'lumen', icon: 'fa-draw-polygon', title: 'Symbol Editor', desc: 'Manual and auto-generated symbols with drawing tools, pin editing, and schematic sync.', color: 'teal' },
+      { tab: 'lumen', icon: 'fa-book', title: 'Library Manager', desc: 'Cadence-like library/cell/view database with analog primitive catalog.', color: 'teal' },
+      { tab: 'lumen', icon: 'fa-flask', title: 'ADE Integration', desc: 'Analog Design Environment for simulation setup, corners, sweeps, and run folders.', color: 'teal' },
+      { tab: 'lumen', icon: 'fa-chart-line', title: 'Waveform Viewer', desc: 'Interactive SigView with zoom, cursors, measurement markers, and export.', color: 'teal' },
+      { tab: 'lumen', icon: 'fa-microchip', title: 'PDK Manager', desc: 'Process Design Kit discovery, model parsing, and IHP SG13G2 KLayout PDK integration.', color: 'teal' },
+      { tab: 'lumen', icon: 'fa-project-diagram', title: 'Layout Integration', desc: 'KLayout with SG13_dev PCells, schematic/device correspondence, DRC/LVS flow.', color: 'teal' },
+      { tab: 'lumen', icon: 'fa-code-branch', title: 'Netlist Bridge', desc: 'SPICE netlist generation and direct GSPICE simulator bridge for seamless simulation.', color: 'teal' },
+    ];
+
+    const comparisonData = [
+      ['Open Source', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-times text-red-400'],
+      ['Parallel Core (OpenMP)', 'fa-check text-emerald-400', 'fa-minus text-gray-600', 'fa-check text-emerald-400', 'fa-minus text-gray-600'],
+      ['Verilog-A / OSDI', 'fa-check text-emerald-400', 'fa-minus text-gray-600', 'fa-minus text-gray-600', 'fa-minus text-gray-600'],
+      ['Harmonic Balance', 'fa-check text-emerald-400', 'fa-times text-red-400', 'fa-check text-emerald-400', 'fa-times text-red-400'],
+      ['S-Parameter Analysis', 'fa-check text-emerald-400', 'fa-minus text-gray-600', 'fa-check text-emerald-400', 'fa-check text-emerald-400'],
+      ['Shooting Method PSS', 'fa-check text-emerald-400', 'fa-times text-red-400', 'fa-check text-emerald-400', 'fa-times text-red-400'],
+      ['Schematic Capture', 'fa-check text-emerald-400', 'fa-times text-red-400', 'fa-times text-red-400', 'fa-check text-emerald-400'],
+      ['Stability (STB)', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-check text-emerald-400'],
+      ['KLU Sparse Solver', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-minus text-gray-600'],
+      ['Windows / Linux / macOS', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-check text-emerald-400', 'fa-minus text-gray-600'],
+    ];
+
+    const roadmapData = [
+      { date: 'v1.3 — Jul 2026', status: 'current', title: 'Academic Beta', items: ['RC transient verified vs analytic/Xyce/VACASK', 'PSP103.4 inverter validation', 'OSDI compact-model loading', 'KLU solver bridge'], color: 'cyan' },
+      { date: 'v1.4 — Q3 2026', status: '', title: 'Stability & Coverage', items: ['BSIM4 and PSP model hardening', 'Extended noise analysis (flicker, cyclostationary)', 'Improved convergence algorithms', 'API for Python scripting'], color: 'teal' },
+      { date: 'v1.5 — Q4 2026', status: '', title: 'RF & Mixed-Signal', items: ['Envelope following analysis', 'Verilog-A/AMS co-simulation', 'Transient noise', 'PSS/PAC/PNOISE production ready'], color: 'cyan' },
+      { date: 'v2.0 — 2027', status: '', title: 'Production Release', items: ['Full PDK qualification flow', 'Foundry model support', 'Lumen Studio 2.0 with layout editor', 'Cross-platform binary packages'], color: 'teal' },
+    ];
+
+    // ====== Render Features ======
+    function renderFeatures(filter = 'all') {
+      const grid = document.getElementById('featuresGrid');
+      grid.innerHTML = features.filter(f => filter === 'all' || f.tab === filter).map(f => `
+        <div class="group p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-all duration-300 glow-card feature-card" data-tab="${f.tab}">
+          <div class="w-12 h-12 rounded-xl bg-${f.color}-500/10 flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
+            <i class="fas ${f.icon} text-${f.color}-400 text-xl"></i>
+          </div>
+          <h3 class="font-semibold mb-2">${f.title}</h3>
+          <p class="text-sm text-gray-400 leading-relaxed">${f.desc}</p>
+          <span class="inline-block mt-3 text-xs px-2 py-0.5 rounded-full bg-white/5 text-gray-500 uppercase tracking-wider">${f.tab}</span>
+        </div>
+      `).join('');
+    }
+
+    // ====== Tabs ======
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active', 'text-cyan-400', 'border-cyan-400'));
+        btn.classList.add('active', 'text-cyan-400', 'border-cyan-400');
+        renderFeatures(btn.dataset.tab);
+      });
+    });
+
+    // ====== Render Comparison ======
+    function renderComparison() {
+      const body = document.getElementById('comparisonBody');
+      body.innerHTML = comparisonData.map(row => `
+        <tr class="border-b border-white/5 hover:bg-white/[0.02] transition">
+          <td class="py-3 pr-4 font-medium">${row[0]}</td>
+          ${[row[1], row[2], row[3], row[4]].map(icon => `<td class="py-3 px-4"><i class="fas ${icon}"></i></td>`).join('')}
+        </tr>
+      `).join('');
+    }
+
+    // ====== Render Roadmap ======
+    function renderRoadmap() {
+      const container = document.getElementById('roadmapItems');
+      container.innerHTML = roadmapData.map((item, i) => `
+        <div class="relative pl-16">
+          <div class="absolute left-3 top-1 w-6 h-6 rounded-full bg-gradient-to-br from-${item.color}-500 to-${item.color}-600 flex items-center justify-center shadow-lg shadow-${item.color}-500/20 ${item.status === 'current' ? 'animate-pulse' : ''}">
+            <div class="w-2 h-2 rounded-full bg-white"></div>
+          </div>
+          <div class="p-6 rounded-2xl border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition glow-card">
+            <div class="flex items-center gap-3 mb-3">
+              <span class="text-xs px-2 py-0.5 rounded-full bg-${item.color}-500/10 text-${item.color}-300 font-medium">${item.date}</span>
+              ${item.status === 'current' ? '<span class="text-xs px-2 py-0.5 rounded-full bg-emerald-500/10 text-emerald-300 font-medium">Current</span>' : ''}
+            </div>
+            <h3 class="text-lg font-bold mb-3">${item.title}</h3>
+            <ul class="space-y-1.5">
+              ${item.items.map(t => `<li class="flex items-start gap-2 text-sm text-gray-400"><i class="fas fa-chevron-right text-${item.color}-400 mt-0.5 text-xs"></i> ${t}</li>`).join('')}
+            </ul>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // ====== Counters ======
+    function animateCounters() {
+      document.querySelectorAll('.stat-counter').forEach(el => {
+        const target = parseInt(el.dataset.target);
+        let current = 0;
+        const increment = Math.ceil(target / 40);
+        const interval = setInterval(() => {
+          current += increment;
+          if (current >= target) { current = target; clearInterval(interval); }
+          el.textContent = current + (target >= 100 ? '+' : '');
+        }, 40);
+      });
+    }
+
+    // ====== Scroll animations ======
+    function observeSections() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('opacity-100', 'translate-y-0');
+            entry.target.classList.remove('opacity-0', 'translate-y-8');
+          }
+        });
+      }, { threshold: 0.1 });
+      document.querySelectorAll('section > div:first-child').forEach(el => {
+        el.classList.add('opacity-0', 'translate-y-8', 'transition-all', 'duration-700');
+        observer.observe(el);
+      });
+    }
+
+    // ====== Navbar scroll effect ======
+    let lastScroll = 0;
+    window.addEventListener('scroll', () => {
+      const navbar = document.getElementById('navbar');
+      const currentScroll = window.scrollY;
+      if (currentScroll > 100) navbar.style.background = 'rgba(0,0,0,0.95)';
+      else navbar.style.background = 'rgba(0,0,0,0.8)';
+      lastScroll = currentScroll;
+    });
+
+    // ====== Init ======
+    renderFeatures('all');
+    renderComparison();
+    renderRoadmap();
+    observeSections();
+    setTimeout(animateCounters, 500);
+  </script>
+</body>
+</html>
