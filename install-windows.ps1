@@ -23,6 +23,24 @@ function Install-Winget($Id) {
     winget install --id $Id --exact --silent --accept-source-agreements --accept-package-agreements
 }
 
+function Get-Vswhere {
+    $path = "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"
+    if (Test-Path -LiteralPath $path) { return $path }
+    return ""
+}
+
+function Get-VsInstall {
+    $vswhere = Get-Vswhere
+    if (-not $vswhere) { return "" }
+    $install = & $vswhere -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath
+    return ($install | Select-Object -First 1)
+}
+
+function Test-CppBuildTools {
+    if ((Test-Command cl) -and (Test-Command nmake)) { return $true }
+    return [bool](Get-VsInstall)
+}
+
 function Clone-Or-Update($Url, $Path) {
     if (Test-Path -LiteralPath $Path) {
         git -C $Path pull --ff-only
@@ -36,7 +54,7 @@ $checks = [ordered]@{
     "Git" = Test-Command git
     "CMake" = Test-Command cmake
     "Python 3" = Test-Command python
-    "C++ build tools" = ((Test-Command cl) -or (Test-Path "${env:ProgramFiles(x86)}\Microsoft Visual Studio\Installer\vswhere.exe"))
+    "C++ build tools" = Test-CppBuildTools
 }
 
 $checks.GetEnumerator() | ForEach-Object { Show-Check $_.Key $_.Value }
@@ -63,12 +81,25 @@ New-Item -ItemType Directory -Force -Path $InstallRoot | Out-Null
 
 $gspice = Join-Path $InstallRoot "GSPICE"
 $lumen = Join-Path $InstallRoot "Lumen_Circuit_Studio"
+$gspiceBuild = ""
 
 Clone-Or-Update "https://github.com/hegdeshreesha/GSPICE.git" $gspice
 Clone-Or-Update "https://github.com/hegdeshreesha/Lumen_Circuit_Studio.git" $lumen
 
-cmake -S $gspice -B (Join-Path $gspice "build")
-cmake --build (Join-Path $gspice "build") --config Release
+$vsInstall = Get-VsInstall
+if ($vsInstall) {
+    $gspiceBuild = Join-Path $gspice "build-vs2022"
+    $cmakeArgs = @("-S", $gspice, "-B", $gspiceBuild, "-G", "Visual Studio 17 2022", "-A", "x64")
+    $gspiceExe = Join-Path $gspiceBuild "Release\gspice.exe"
+} elseif ((Test-Command cl) -and (Test-Command nmake)) {
+    $gspiceBuild = Join-Path $gspice "build-nmake"
+    $cmakeArgs = @("-S", $gspice, "-B", $gspiceBuild, "-G", "NMake Makefiles")
+    $gspiceExe = Join-Path $gspiceBuild "gspice.exe"
+} else {
+    throw "No usable C++ build environment found. Install Visual Studio Build Tools with the C++ workload, open a new PowerShell window, and rerun this script."
+}
+cmake @cmakeArgs
+cmake --build $gspiceBuild --config Release
 
 Push-Location $lumen
 .\scripts\bootstrap_dev.ps1
@@ -78,7 +109,7 @@ Pop-Location
 Write-Host ""
 Write-Host "GSPICE built in: $gspice"
 Write-Host "GSPICE executable:"
-Write-Host "  $(Join-Path $gspice 'build\Release\gspice.exe')"
+Write-Host "  $gspiceExe"
 Write-Host "Lumen installed in: $lumen"
 Write-Host "Start Lumen with:"
 Write-Host "  cd $lumen"
