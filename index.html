@@ -293,7 +293,8 @@
                 <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">powershell -ExecutionPolicy Bypass -File .\install-windows.ps1</pre>
                 <div class="text-xs font-semibold text-cyan-400 mt-4 mb-2">Launch Lumen</div>
                 <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">cd "$HOME\lumen-gspice\Lumen_Circuit_Studio"
-.\.venv\Scripts\python.exe -m lumen</pre>
+$env:QT_QPA_PLATFORM = "windows"
+.\.venv\Scripts\pythonw.exe -m lumen</pre>
               </div>
               <a href="install-windows.ps1" class="inline-flex justify-center rounded-lg bg-cyan-700 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600 transition">Download script</a>
             </div>
@@ -317,6 +318,7 @@
                 <div class="text-xs font-semibold text-teal-400 mt-4 mb-2">Launch Lumen</div>
                 <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">cd "$HOME/lumen-gspice/Lumen_Circuit_Studio"
 . .venv/bin/activate
+export QT_QPA_PLATFORM=cocoa
 python -m lumen</pre>
               </div>
               <a href="install-macos.sh" class="inline-flex justify-center rounded-lg bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-600 transition">Download script</a>
@@ -341,6 +343,7 @@ python -m lumen</pre>
                 <div class="text-xs font-semibold text-cyan-400 mt-4 mb-2">Launch Lumen</div>
                 <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">cd "$HOME/lumen-gspice/Lumen_Circuit_Studio"
 . .venv/bin/activate
+export QT_QPA_PLATFORM=xcb
 python -m lumen</pre>
               </div>
               <a href="install-linux.sh" class="inline-flex justify-center rounded-lg bg-cyan-700 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600 transition">Download script</a>
@@ -369,6 +372,10 @@ python -m venv .venv
 # macOS/Linux: . .venv/bin/activate
 python -m pip install -r requirements.txt
 python scripts\verify_environment.py
+# Windows: $env:QT_QPA_PLATFORM = "windows"
+# macOS: export QT_QPA_PLATFORM=cocoa
+# Linux: export QT_QPA_PLATFORM=xcb
+# Windows GUI launch: .\.venv\Scripts\pythonw.exe -m lumen
 python -m lumen</pre>
         </div>
       </details>

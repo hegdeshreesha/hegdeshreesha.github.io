@@ -43,4 +43,5 @@ Write-Host "GSPICE built in: $gspice"
 Write-Host "Lumen installed in: $lumen"
 Write-Host "Start Lumen with:"
 Write-Host "  cd $lumen"
-Write-Host "  .\.venv\Scripts\python.exe -m lumen"
+Write-Host '  $env:QT_QPA_PLATFORM = "windows"'
+Write-Host "  .\.venv\Scripts\pythonw.exe -m lumen"
