@@ -9,7 +9,7 @@
   <style>
     body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
     code, pre { font-family: "SF Mono", "Fira Code", Consolas, monospace; font-size: 13px; }
-    pre { line-height: 1.5; }
+    pre { line-height: 1.5; overflow-x: auto; }
     .card-hover { transition: border-color .2s, background .2s; }
     .card-hover:hover { border-color: #15575c; background: rgba(6, 182, 212, 0.02); }
     .gradient-text {
@@ -21,6 +21,18 @@
     ::-webkit-scrollbar { width: 5px; }
     ::-webkit-scrollbar-track { background: #050d15; }
     ::-webkit-scrollbar-thumb { background: #15575c; border-radius: 3px; }
+    .install-tabs input { position: absolute; opacity: 0; pointer-events: none; }
+    .install-panel { display: none; }
+    #install-windows:checked ~ .install-panels .windows,
+    #install-macos:checked ~ .install-panels .macos,
+    #install-linux:checked ~ .install-panels .linux { display: block; }
+    #install-windows:checked ~ .install-labels label[for="install-windows"],
+    #install-macos:checked ~ .install-labels label[for="install-macos"],
+    #install-linux:checked ~ .install-labels label[for="install-linux"] {
+      border-color: #0891b2;
+      color: white;
+      background: rgba(8, 145, 178, 0.18);
+    }
   </style>
 </head>
 <body class="bg-[#050d15] text-gray-300 antialiased relative min-h-screen">
@@ -35,11 +47,11 @@
         <img src="Lumen_studio_logo.png" alt="" class="h-6 w-auto" />
         <span class="gradient-text">Lumen EDA</span>
       </a>
-      <div class="flex items-center gap-5 text-sm text-gray-600">
+      <div class="flex flex-wrap items-center justify-end gap-x-5 gap-y-2 text-sm text-gray-600">
         <a href="#screenshots" class="hover:text-cyan-400 transition">Screenshots</a>
         <a href="#features" class="hover:text-cyan-400 transition">Features</a>
         <a href="#tech" class="hover:text-cyan-400 transition">Tech</a>
-        <a href="#download" class="hover:text-cyan-400 transition">Download</a>
+        <a href="#installation" class="hover:text-cyan-400 transition">Install</a>
         <a href="#author" class="hover:text-cyan-400 transition">Contact</a>
         <a href="https://github.com/hegdeshreesha/GSPICE" class="hover:text-white transition">GitHub</a>
       </div>
@@ -58,8 +70,7 @@
         Lumen Circuit Studio &mdash; a full-featured EDA workbench with schematic capture, symbol editing, PDK management, and ADE-style simulation flow.
       </p>
       <div class="flex flex-wrap gap-3 mt-8">
-        <a href="https://github.com/hegdeshreesha/GSPICE" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-cyan-700 hover:bg-cyan-600 text-white font-medium text-sm transition">Download GSPICE</a>
-        <a href="https://github.com/hegdeshreesha/Lumen_Circuit_Studio" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-teal-700 hover:bg-teal-600 text-white font-medium text-sm transition">Download Lumen</a>
+        <a href="#installation" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-cyan-700 hover:bg-cyan-600 text-white font-medium text-sm transition">Install Lumen + GSPICE</a>
         <a href="#features" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg border border-gray-800 hover:border-cyan-700 text-gray-400 font-medium text-sm transition">Explore features</a>
       </div>
       <div class="flex items-center gap-6 mt-6 text-sm text-gray-700">
@@ -248,28 +259,123 @@
       </div>
     </div>
 
-    <!-- DOWNLOAD -->
-    <div class="py-16 border-t border-white/[0.04]" id="download">
-      <div class="text-xs font-semibold tracking-widest text-teal-500 uppercase mb-3">Get started</div>
-      <h2 class="text-2xl font-bold text-white mb-6">Download &amp; quick start</h2>
-      <div class="grid sm:grid-cols-2 gap-6">
-        <div class="border border-gray-800/60 rounded-xl p-6 card-hover">
-          <div class="text-sm font-semibold text-white mb-4">GSPICE</div>
+    <!-- INSTALLATION GUIDE -->
+    <div class="py-16 border-t border-white/[0.04]" id="installation">
+      <div class="text-xs font-semibold tracking-widest text-teal-500 uppercase mb-3">Installation guide</div>
+      <h2 class="text-2xl font-bold text-white mb-2">Install Lumen and GSPICE</h2>
+      <p class="text-gray-600 max-w-xl mb-8">These steps are written for circuit design engineers who want to get from a clean machine to schematic capture and simulation. Pick your operating system and follow the numbered flow.</p>
+
+      <div class="install-tabs mb-8">
+        <input type="radio" name="install-os" id="install-windows" checked />
+        <input type="radio" name="install-os" id="install-macos" />
+        <input type="radio" name="install-os" id="install-linux" />
+
+        <div class="install-labels flex flex-wrap gap-2 mb-4">
+          <label for="install-windows" class="cursor-pointer rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-500 hover:border-cyan-700 hover:text-cyan-300 transition">Windows</label>
+          <label for="install-macos" class="cursor-pointer rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-500 hover:border-cyan-700 hover:text-cyan-300 transition">macOS</label>
+          <label for="install-linux" class="cursor-pointer rounded-lg border border-gray-800 px-4 py-2 text-sm text-gray-500 hover:border-cyan-700 hover:text-cyan-300 transition">Linux</label>
+        </div>
+
+        <div class="install-panels border border-gray-800/60 rounded-xl p-6 card-hover">
+          <div class="install-panel windows">
+            <div class="grid lg:grid-cols-[1fr,auto] gap-5 items-start">
+              <div>
+                <div class="text-sm font-semibold text-white mb-2">Windows</div>
+                <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
+                  <li>Install Git for Windows, CMake, Python 3, and Visual Studio Build Tools with the C++ workload.</li>
+                  <li>Download <code class="text-gray-400">install-windows.ps1</code> using the button on the right.</li>
+                  <li>Open PowerShell in the download folder.</li>
+                  <li>Run the installer command below. It clones Lumen and GSPICE, builds GSPICE, and prepares the Lumen Python environment.</li>
+                  <li>When it finishes, start Lumen with the launch command shown below.</li>
+                  <li>In Lumen, open the simulation environment and select the built <code class="text-gray-400">gspice.exe</code> as the simulator.</li>
+                </ol>
+                <div class="text-xs font-semibold text-cyan-400 mb-2">Run installer</div>
+                <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">powershell -ExecutionPolicy Bypass -File .\install-windows.ps1</pre>
+                <div class="text-xs font-semibold text-cyan-400 mt-4 mb-2">Launch Lumen</div>
+                <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">cd "$HOME\lumen-gspice\Lumen_Circuit_Studio"
+.\.venv\Scripts\python.exe -m lumen</pre>
+              </div>
+              <a href="install-windows.ps1" class="inline-flex justify-center rounded-lg bg-cyan-700 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600 transition">Download script</a>
+            </div>
+          </div>
+
+          <div class="install-panel macos">
+            <div class="grid lg:grid-cols-[1fr,auto] gap-5 items-start">
+              <div>
+                <div class="text-sm font-semibold text-white mb-2">macOS</div>
+                <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
+                  <li>Install Xcode Command Line Tools with <code class="text-gray-400">xcode-select --install</code>.</li>
+                  <li>Install CMake, Git, and Python 3 if they are not already available.</li>
+                  <li>Download <code class="text-gray-400">install-macos.sh</code> using the button on the right.</li>
+                  <li>Open Terminal in the download folder.</li>
+                  <li>Run the two commands below. The script clones both projects, builds GSPICE, and creates Lumen's Python environment.</li>
+                  <li>Start Lumen with the launch command shown below, then select the built GSPICE binary in the simulation environment.</li>
+                </ol>
+                <div class="text-xs font-semibold text-teal-400 mb-2">Run installer</div>
+                <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">chmod +x install-macos.sh
+./install-macos.sh</pre>
+                <div class="text-xs font-semibold text-teal-400 mt-4 mb-2">Launch Lumen</div>
+                <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">cd "$HOME/lumen-gspice/Lumen_Circuit_Studio"
+. .venv/bin/activate
+python -m lumen</pre>
+              </div>
+              <a href="install-macos.sh" class="inline-flex justify-center rounded-lg bg-teal-700 px-4 py-2 text-sm font-medium text-white hover:bg-teal-600 transition">Download script</a>
+            </div>
+          </div>
+
+          <div class="install-panel linux">
+            <div class="grid lg:grid-cols-[1fr,auto] gap-5 items-start">
+              <div>
+                <div class="text-sm font-semibold text-white mb-2">Linux</div>
+                <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
+                  <li>Install Git, CMake, Python 3, python3-venv, and a C++17 compiler from your package manager.</li>
+                  <li>Download <code class="text-gray-400">install-linux.sh</code> using the button on the right.</li>
+                  <li>Open a terminal in the download folder.</li>
+                  <li>Run the two commands below. The script clones both repositories, builds GSPICE, and prepares Lumen.</li>
+                  <li>Start Lumen with the launch command shown below.</li>
+                  <li>Open the simulation environment in Lumen and point it to the built GSPICE executable before running a test schematic.</li>
+                </ol>
+                <div class="text-xs font-semibold text-cyan-400 mb-2">Run installer</div>
+                <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">chmod +x install-linux.sh
+./install-linux.sh</pre>
+                <div class="text-xs font-semibold text-cyan-400 mt-4 mb-2">Launch Lumen</div>
+                <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">cd "$HOME/lumen-gspice/Lumen_Circuit_Studio"
+. .venv/bin/activate
+python -m lumen</pre>
+              </div>
+              <a href="install-linux.sh" class="inline-flex justify-center rounded-lg bg-cyan-700 px-4 py-2 text-sm font-medium text-white hover:bg-cyan-600 transition">Download script</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="border border-gray-800/60 rounded-xl p-5 text-xs text-gray-500">
+        <div class="text-sm font-semibold text-white mb-2">First simulation check</div>
+        <p>After launching Lumen, create or open a small RC schematic, open the simulation environment, choose a transient analysis, run GSPICE, and open the RAW or CSV result in SigView. That verifies the schematic-to-simulator-to-waveform path.</p>
+      </div>
+
+      <details class="mt-6 border border-gray-800/60 rounded-xl p-5">
+        <summary class="cursor-pointer text-sm font-semibold text-white">Manual build commands</summary>
+        <div class="grid lg:grid-cols-2 gap-4 mt-4">
           <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">git clone https://github.com/hegdeshreesha/GSPICE.git
 cd GSPICE
 cmake -S . -B build
 cmake --build build --config Release
-./build/gspice circuit.sp --threads 8</pre>
-          <a href="https://github.com/hegdeshreesha/GSPICE/releases" class="inline-block mt-4 text-xs text-cyan-400 hover:text-cyan-300 transition">View releases &rarr;</a>
-        </div>
-        <div class="border border-gray-800/60 rounded-xl p-6 card-hover">
-          <div class="text-sm font-semibold text-white mb-4">Lumen Circuit Studio</div>
+ctest --test-dir build -C Release --output-on-failure</pre>
           <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">git clone https://github.com/hegdeshreesha/Lumen_Circuit_Studio.git
 cd Lumen_Circuit_Studio
-.\scripts\bootstrap_dev.ps1
+python -m venv .venv
+# Windows: .\.venv\Scripts\Activate.ps1
+# macOS/Linux: . .venv/bin/activate
+python -m pip install -r requirements.txt
+python scripts\verify_environment.py
 python -m lumen</pre>
-          <a href="https://github.com/hegdeshreesha/Lumen_Circuit_Studio" class="inline-block mt-4 text-xs text-teal-400 hover:text-teal-300 transition">Repository &rarr;</a>
         </div>
+      </details>
+
+      <div class="flex flex-wrap gap-4 mt-6 text-xs">
+        <a href="https://github.com/hegdeshreesha/GSPICE" class="text-cyan-400 hover:text-cyan-300 transition">GSPICE repository &rarr;</a>
+        <a href="https://github.com/hegdeshreesha/Lumen_Circuit_Studio" class="text-teal-400 hover:text-teal-300 transition">Lumen repository &rarr;</a>
       </div>
     </div>
 
