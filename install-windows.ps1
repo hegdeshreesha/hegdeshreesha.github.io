@@ -40,6 +40,8 @@ Pop-Location
 
 Write-Host ""
 Write-Host "GSPICE built in: $gspice"
+Write-Host "GSPICE executable:"
+Write-Host "  $(Join-Path $gspice 'build\Release\gspice.exe')"
 Write-Host "Lumen installed in: $lumen"
 Write-Host "Start Lumen with:"
 Write-Host "  cd $lumen"

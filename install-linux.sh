@@ -44,6 +44,8 @@ python scripts/verify_environment.py
 
 echo
 echo "GSPICE built in: $GSPICE"
+echo "GSPICE executable:"
+echo "  $GSPICE/build/gspice"
 echo "Lumen installed in: $LUMEN"
 echo "Start Lumen with:"
 echo "  cd \"$LUMEN\""
