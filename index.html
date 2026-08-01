@@ -282,10 +282,11 @@
               <div>
                 <div class="text-sm font-semibold text-white mb-2">Windows</div>
                 <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
-                  <li>Install Git for Windows, CMake, Python 3, and Visual Studio Build Tools with the C++ workload.</li>
+                  <li>Recommended prerequisites: Git for Windows, CMake, Python 3, and Visual Studio Build Tools with the C++ workload.</li>
                   <li>Download <code class="text-gray-400">install-windows.ps1</code> using the button on the right.</li>
                   <li>Open PowerShell in the download folder.</li>
-                  <li>Run the installer command below. It clones Lumen and GSPICE, builds GSPICE, and prepares the Lumen Python environment.</li>
+                  <li>Run the installer command below. It prints <code class="text-gray-400">[OK]</code> or <code class="text-gray-400">[MISSING]</code> for each prerequisite and asks before installing anything missing with <code class="text-gray-400">winget</code>.</li>
+                  <li>After prerequisites pass, it clones Lumen and GSPICE, builds GSPICE, and prepares the Lumen Python environment.</li>
                   <li>When it finishes, start Lumen with the launch command shown below.</li>
                   <li>After Lumen opens, configure GSPICE and the PDK using the setup steps below.</li>
                 </ol>
@@ -305,11 +306,11 @@ $env:QT_QPA_PLATFORM = "windows"
               <div>
                 <div class="text-sm font-semibold text-white mb-2">macOS</div>
                 <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
-                  <li>Install Xcode Command Line Tools with <code class="text-gray-400">xcode-select --install</code>.</li>
-                  <li>Install CMake, Git, and Python 3 if they are not already available.</li>
+                  <li>Recommended prerequisites: Xcode Command Line Tools, CMake, Git, and Python 3.</li>
                   <li>Download <code class="text-gray-400">install-macos.sh</code> using the button on the right.</li>
                   <li>Open Terminal in the download folder.</li>
-                  <li>Run the two commands below. The script clones both projects, builds GSPICE, and creates Lumen's Python environment.</li>
+                  <li>Run the two commands below. The script prints <code class="text-gray-400">[OK]</code> or <code class="text-gray-400">[MISSING]</code> for each prerequisite and asks before installing anything missing with Xcode tools/Homebrew.</li>
+                  <li>After prerequisites pass, it clones both projects, builds GSPICE, and creates Lumen's Python environment.</li>
                   <li>After Lumen opens, configure GSPICE and the PDK using the setup steps below.</li>
                 </ol>
                 <div class="text-xs font-semibold text-teal-400 mb-2">Run installer</div>
@@ -330,10 +331,11 @@ python -m lumen</pre>
               <div>
                 <div class="text-sm font-semibold text-white mb-2">Linux</div>
                 <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
-                  <li>Install Git, CMake, Python 3, python3-venv, and a C++17 compiler from your package manager.</li>
+                  <li>Recommended prerequisites: Git, CMake, Python 3, python3-venv, and a C++17 compiler.</li>
                   <li>Download <code class="text-gray-400">install-linux.sh</code> using the button on the right.</li>
                   <li>Open a terminal in the download folder.</li>
-                  <li>Run the two commands below. The script clones both repositories, builds GSPICE, and prepares Lumen.</li>
+                  <li>Run the two commands below. The script prints <code class="text-gray-400">[OK]</code> or <code class="text-gray-400">[MISSING]</code> for each prerequisite and asks before installing anything missing with apt, dnf, or pacman.</li>
+                  <li>After prerequisites pass, it clones both repositories, builds GSPICE, and prepares Lumen.</li>
                   <li>Start Lumen with the launch command shown below.</li>
                   <li>After Lumen opens, configure GSPICE and the PDK using the setup steps below.</li>
                 </ol>

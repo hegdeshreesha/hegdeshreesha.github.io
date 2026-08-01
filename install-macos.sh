@@ -3,11 +3,20 @@ set -euo pipefail
 
 INSTALL_ROOT="${1:-$HOME/lumen-gspice}"
 
-need() {
-  command -v "$1" >/dev/null 2>&1 || {
-    echo "$1 was not found on PATH." >&2
-    exit 1
-  }
+has() { command -v "$1" >/dev/null 2>&1; }
+
+show_check() {
+  if [ "$2" = "1" ]; then
+    printf '[OK] %s\n' "$1"
+  else
+    printf '[MISSING] %s\n' "$1"
+  fi
+}
+
+ask_yes() {
+  printf '%s [y/N] ' "$1"
+  read -r answer
+  case "$answer" in y|Y|yes|YES) return 0 ;; *) return 1 ;; esac
 }
 
 clone_or_update() {
@@ -20,9 +29,31 @@ clone_or_update() {
   fi
 }
 
-need git
-need cmake
-need python3
+echo "Checking prerequisites..."
+missing=()
+
+if xcode-select -p >/dev/null 2>&1; then show_check "Xcode Command Line Tools" 1; else show_check "Xcode Command Line Tools" 0; missing+=("xcode"); fi
+if has git; then show_check "Git" 1; else show_check "Git" 0; missing+=("git"); fi
+if has cmake; then show_check "CMake" 1; else show_check "CMake" 0; missing+=("cmake"); fi
+if has python3; then show_check "Python 3" 1; else show_check "Python 3" 0; missing+=("python3"); fi
+
+if [ "${#missing[@]}" -gt 0 ]; then
+  if ask_yes "Install missing prerequisites now?"; then
+    if printf '%s\n' "${missing[@]}" | grep -qx xcode; then
+      xcode-select --install || true
+      echo "Finish the Xcode installer, then rerun this script."
+    fi
+    if ! has brew; then
+      echo "Homebrew is not installed. Install Homebrew from https://brew.sh, then rerun this script."
+      exit 1
+    fi
+    brew install git cmake python
+    echo "Prerequisites installed. Rerun this script."
+    exit 0
+  fi
+  echo "Missing prerequisites: ${missing[*]}" >&2
+  exit 1
+fi
 
 mkdir -p "$INSTALL_ROOT"
 
