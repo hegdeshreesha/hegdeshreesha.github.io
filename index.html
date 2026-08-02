@@ -67,7 +67,7 @@
       </h1>
       <p class="mt-4 text-base sm:text-lg text-gray-600 max-w-xl leading-relaxed">
         GSPICE &mdash; an open-source, parallel-accelerated SPICE engine built in C++17.
-        Lumen Circuit Studio &mdash; a full-featured EDA workbench with schematic capture, symbol editing, PDK management, and ADE-style simulation flow.
+        Lumen Circuit Studio &mdash; a full-featured EDA workbench with schematic capture, symbol editing, PDK management, and an integrated simulation cockpit.
       </p>
       <div class="flex flex-wrap gap-3 mt-8">
         <a href="#installation" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-cyan-700 hover:bg-cyan-600 text-white font-medium text-sm transition">Install Lumen + GSPICE</a>
@@ -99,7 +99,7 @@
           <img src="library_manager.png" alt="Lumen Circuit Studio — Library Manager" class="w-full bg-[#0a1017]" />
           <div class="p-4 border-t border-gray-800/60">
             <div class="text-sm font-semibold text-white">Library Manager</div>
-            <p class="text-xs text-gray-500 mt-1">Cadence-style library/cell/view database with the analog primitive catalog.</p>
+            <p class="text-xs text-gray-500 mt-1">Structured library, cell, and view database with the analog primitive catalog.</p>
           </div>
         </div>
         <div class="border border-gray-800/60 rounded-xl overflow-hidden card-hover">
@@ -113,7 +113,7 @@
           <img src="sim_env.png" alt="Lumen Circuit Studio — Simulation Environment" class="w-full bg-[#0a1017]" />
           <div class="p-4 border-t border-gray-800/60">
             <div class="text-sm font-semibold text-white">Simulation Environment</div>
-            <p class="text-xs text-gray-500 mt-1">ADE-style setup for analyses, corners, sweeps, and run folders — bridged to the GSPICE engine.</p>
+            <p class="text-xs text-gray-500 mt-1">Simulation cockpit for analyses, corners, sweeps, and run folders — bridged to the GSPICE engine.</p>
           </div>
         </div>
         <div class="border border-gray-800/60 rounded-xl overflow-hidden card-hover">
@@ -192,11 +192,11 @@
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">Library Manager</div>
-              <p class="text-xs text-gray-500">Cadence-like library/cell/view database with analog primitive catalog.</p>
+              <p class="text-xs text-gray-500">Structured library, cell, and view database with analog primitive catalog.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
-              <div class="text-sm font-semibold text-white mb-1">ADE Integration</div>
-              <p class="text-xs text-gray-500">Analog Design Environment for simulation setup, corners, sweeps, and run folders.</p>
+              <div class="text-sm font-semibold text-white mb-1">Simulation Cockpit</div>
+              <p class="text-xs text-gray-500">Integrated setup for simulation analyses, corners, sweeps, and run folders.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">Waveform Viewer</div>
@@ -204,11 +204,11 @@
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">PDK Manager</div>
-              <p class="text-xs text-gray-500">Process Design Kit discovery, model parsing, IHP SG13G2 KLayout PDK integration.</p>
+              <p class="text-xs text-gray-500">Process Design Kit discovery, model parsing, and bundled open PDK integration.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">Layout Integration</div>
-              <p class="text-xs text-gray-500">KLayout with SG13_dev PCells, schematic/device correspondence, DRC/LVS flow.</p>
+              <p class="text-xs text-gray-500">Parameterized devices, schematic/device correspondence, DRC/LVS flow, and GDS export.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">Netlist Bridge</div>
@@ -242,15 +242,15 @@
         </div>
         <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
           <div class="text-sm font-semibold text-white mb-1">Python GUI</div>
-          <p class="text-xs text-gray-500">Lumen built with PyQt6 for responsive cross-platform UX.</p>
+          <p class="text-xs text-gray-500">Responsive desktop interface for cross-platform circuit design workflows.</p>
         </div>
         <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
           <div class="text-sm font-semibold text-white mb-1">Harmonic Balance</div>
           <p class="text-xs text-gray-500">PSS, HB, PAC, PNOISE, and envelope following analysis.</p>
         </div>
         <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
-          <div class="text-sm font-semibold text-white mb-1">KLayout Integration</div>
-          <p class="text-xs text-gray-500">IHP SG13G2 PDK with PCells, DRC/LVS flow, GDS export.</p>
+          <div class="text-sm font-semibold text-white mb-1">Layout Flow</div>
+          <p class="text-xs text-gray-500">Open PDK support with parameterized devices, DRC/LVS flow, and GDS export.</p>
         </div>
         <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
           <div class="text-sm font-semibold text-white mb-1">Monte Carlo</div>
@@ -386,7 +386,7 @@ $HOME/lumen-gspice/GSPICE/build/gspice</pre>
             <li>Click <span class="text-gray-300">Set Active</span> so new schematics use that PDK.</li>
             <li>Open the <span class="text-gray-300">Devices</span>, <span class="text-gray-300">Layers</span>, and <span class="text-gray-300">Corners</span> tabs to confirm the PDK content loaded.</li>
           </ol>
-          <p class="mt-4">For the bundled open flow, select the IHP SG13G2 PDK, install it, then set it active before creating the first library or schematic.</p>
+          <p class="mt-4">For the bundled open flow, select the included PDK, install it, then set it active before creating the first library or schematic.</p>
         </div>
       </div>
 
@@ -433,7 +433,7 @@ python -m lumen</pre>
           <div class="text-xs font-semibold text-cyan-400 mb-1">v1.3 &mdash; Jul 2026 <span class="text-teal-400 ml-2">Current</span></div>
           <div class="text-sm font-semibold text-white mb-2">Academic Beta</div>
           <ul class="text-xs text-gray-500 space-y-1">
-            <li>RC transient verified vs analytic, Xyce, VACASK</li>
+            <li>RC transient verified against analytic reference results</li>
             <li>PSP103.4 inverter validation</li>
             <li>OSDI compact-model loading</li>
             <li>KLU solver bridge</li>
