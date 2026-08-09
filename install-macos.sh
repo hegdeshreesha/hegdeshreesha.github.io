@@ -36,6 +36,7 @@ if xcode-select -p >/dev/null 2>&1; then show_check "Xcode Command Line Tools" 1
 if has git; then show_check "Git" 1; else show_check "Git" 0; missing+=("git"); fi
 if has cmake; then show_check "CMake" 1; else show_check "CMake" 0; missing+=("cmake"); fi
 if has python3; then show_check "Python 3" 1; else show_check "Python 3" 0; missing+=("python3"); fi
+if has brew && brew list suite-sparse >/dev/null 2>&1; then show_check "SuiteSparse/KLU" 1; else show_check "SuiteSparse/KLU" 0; missing+=("suite-sparse"); fi
 
 if [ "${#missing[@]}" -gt 0 ]; then
   if ask_yes "Install missing prerequisites now?"; then
@@ -47,7 +48,7 @@ if [ "${#missing[@]}" -gt 0 ]; then
       echo "Homebrew is not installed. Install Homebrew from https://brew.sh, then rerun this script."
       exit 1
     fi
-    brew install git cmake python
+    brew install git cmake python suite-sparse
     echo "Prerequisites installed. Rerun this script."
     exit 0
   fi
@@ -63,7 +64,7 @@ LUMEN="$INSTALL_ROOT/Lumen_Circuit_Studio"
 clone_or_update "https://github.com/hegdeshreesha/GSPICE.git" "$GSPICE"
 clone_or_update "https://github.com/hegdeshreesha/Lumen_Circuit_Studio.git" "$LUMEN"
 
-cmake -S "$GSPICE" -B "$GSPICE/build"
+cmake -S "$GSPICE" -B "$GSPICE/build" -DGSPICE_ENABLE_KLU=ON -DGSPICE_REQUIRE_KLU=ON
 cmake --build "$GSPICE/build" --config Release
 
 cd "$LUMEN"
@@ -77,6 +78,8 @@ echo
 echo "GSPICE built in: $GSPICE"
 echo "GSPICE executable:"
 echo "  $GSPICE/build/gspice"
+echo "GSPICE capabilities:"
+"$GSPICE/build/gspice" --capabilities || true
 echo "Lumen installed in: $LUMEN"
 echo "Start Lumen with:"
 echo "  cd \"$LUMEN\""

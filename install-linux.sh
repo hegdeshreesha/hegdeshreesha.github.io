@@ -32,13 +32,13 @@ clone_or_update() {
 install_missing() {
   if has apt-get; then
     sudo apt-get update
-    sudo apt-get install -y git cmake python3 python3-venv build-essential
+    sudo apt-get install -y git cmake python3 python3-venv build-essential libsuitesparse-dev
   elif has dnf; then
-    sudo dnf install -y git cmake python3 gcc gcc-c++ make
+    sudo dnf install -y git cmake python3 gcc gcc-c++ make suitesparse-devel
   elif has pacman; then
-    sudo pacman -Sy --needed git cmake python base-devel
+    sudo pacman -Sy --needed git cmake python base-devel suitesparse
   else
-    echo "No supported package manager found. Install Git, CMake, Python 3, venv, and a C++ compiler manually." >&2
+    echo "No supported package manager found. Install Git, CMake, Python 3, venv, a C++ compiler, and SuiteSparse/KLU manually." >&2
     exit 1
   fi
 }
@@ -51,6 +51,7 @@ if has cmake; then show_check "CMake" 1; else show_check "CMake" 0; missing+=("c
 if has python3; then show_check "Python 3" 1; else show_check "Python 3" 0; missing+=("python3"); fi
 if python3 -m venv --help >/dev/null 2>&1; then show_check "Python venv" 1; else show_check "Python venv" 0; missing+=("python3-venv"); fi
 if has c++ || has g++; then show_check "C++ compiler" 1; else show_check "C++ compiler" 0; missing+=("compiler"); fi
+if ldconfig -p 2>/dev/null | grep -qi 'libklu\|libsuitesparseconfig' || [ -e /usr/include/suitesparse/klu.h ]; then show_check "SuiteSparse/KLU" 1; else show_check "SuiteSparse/KLU" 0; missing+=("suitesparse"); fi
 
 if [ "${#missing[@]}" -gt 0 ]; then
   if ask_yes "Install missing prerequisites now?"; then
@@ -70,7 +71,7 @@ LUMEN="$INSTALL_ROOT/Lumen_Circuit_Studio"
 clone_or_update "https://github.com/hegdeshreesha/GSPICE.git" "$GSPICE"
 clone_or_update "https://github.com/hegdeshreesha/Lumen_Circuit_Studio.git" "$LUMEN"
 
-cmake -S "$GSPICE" -B "$GSPICE/build"
+cmake -S "$GSPICE" -B "$GSPICE/build" -DGSPICE_ENABLE_KLU=ON -DGSPICE_REQUIRE_KLU=ON
 cmake --build "$GSPICE/build" --config Release
 
 cd "$LUMEN"
@@ -84,6 +85,8 @@ echo
 echo "GSPICE built in: $GSPICE"
 echo "GSPICE executable:"
 echo "  $GSPICE/build/gspice"
+echo "GSPICE capabilities:"
+"$GSPICE/build/gspice" --capabilities || true
 echo "Lumen installed in: $LUMEN"
 echo "Start Lumen with:"
 echo "  cd \"$LUMEN\""

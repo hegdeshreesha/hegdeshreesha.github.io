@@ -86,13 +86,13 @@
     <div class="py-16 border-t border-white/[0.04]" id="screenshots">
       <div class="text-xs font-semibold tracking-widest text-teal-500 uppercase mb-3">Screenshots</div>
       <h2 class="text-2xl font-bold text-white mb-2">Lumen in action</h2>
-      <p class="text-gray-600 max-w-xl mb-8">The Lumen Circuit Studio workbench — from the Analog Pilot Window to the waveform viewer.</p>
+      <p class="text-gray-600 max-w-xl mb-8">The Lumen Circuit Studio workbench &mdash; from the Analog Pilot Window to the waveform viewer.</p>
       <div class="grid sm:grid-cols-2 gap-6">
         <div class="border border-gray-800/60 rounded-xl overflow-hidden card-hover">
           <img src="apw.png" alt="Lumen Circuit Studio — Analog Pilot Window" class="w-full bg-[#0a1017]" />
           <div class="p-4 border-t border-gray-800/60">
             <div class="text-sm font-semibold text-white">Analog Pilot Window</div>
-            <p class="text-xs text-gray-500 mt-1">The main hub — project context, command line, and output log for launching all tools.</p>
+            <p class="text-xs text-gray-500 mt-1">The main hub &mdash; project context, command line, and output log for launching all tools.</p>
           </div>
         </div>
         <div class="border border-gray-800/60 rounded-xl overflow-hidden card-hover">
@@ -113,7 +113,7 @@
           <img src="sim_env.png" alt="Lumen Circuit Studio — Simulation Environment" class="w-full bg-[#0a1017]" />
           <div class="p-4 border-t border-gray-800/60">
             <div class="text-sm font-semibold text-white">Simulation Environment</div>
-            <p class="text-xs text-gray-500 mt-1">Simulation cockpit for analyses, corners, sweeps, and run folders — bridged to the GSPICE engine.</p>
+            <p class="text-xs text-gray-500 mt-1">Simulation cockpit for analyses, corners, sweeps, and run folders &mdash; bridged to the GSPICE engine.</p>
           </div>
         </div>
         <div class="border border-gray-800/60 rounded-xl overflow-hidden card-hover">
@@ -130,7 +130,7 @@
     <div class="grid grid-cols-2 sm:grid-cols-4 gap-8 py-10 border-t border-white/[0.04] text-center">
       <div><div class="text-2xl font-bold text-cyan-400">15+</div><div class="text-xs text-gray-600 mt-1">Analysis Types</div></div>
       <div><div class="text-2xl font-bold text-teal-300">16</div><div class="text-xs text-gray-600 mt-1">Parallel Threads</div></div>
-      <div><div class="text-2xl font-bold text-cyan-400">100x</div><div class="text-xs text-gray-600 mt-1">KLU Speedup</div></div>
+      <div><div class="text-2xl font-bold text-cyan-400">KLU</div><div class="text-xs text-gray-600 mt-1">Sparse Solver</div></div>
       <div><div class="text-2xl font-bold text-teal-300">2</div><div class="text-xs text-gray-600 mt-1">Projects Combined</div></div>
     </div>
 
@@ -149,8 +149,8 @@
               <p class="text-xs text-gray-500">Multi-threaded device evaluation and matrix stamping with OpenMP. Scales to 16 threads.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
-              <div class="text-sm font-semibold text-white mb-1">OSDI / Verilog-A</div>
-              <p class="text-xs text-gray-500">Native Open Simulation Device Interface host. Load BSIM4, PSP, HICUM models dynamically.</p>
+              <div class="text-sm font-semibold text-white mb-1">GSDI/GMC Models</div>
+              <p class="text-xs text-gray-500">Native PSP, BSIM, junction, resistor, and capacitor paths through the GSPICE device interface and model compiler.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">RF Analysis Suite</div>
@@ -158,7 +158,7 @@
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">SuiteSparse/KLU</div>
-              <p class="text-xs text-gray-500">Industry gold-standard sparse matrix solver for large circuit simulations.</p>
+              <p class="text-xs text-gray-500">Optional KLU-enabled sparse matrix build, selected directly from the Lumen Simulation Cockpit.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">15+ Analysis Types</div>
@@ -196,7 +196,7 @@
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">Simulation Cockpit</div>
-              <p class="text-xs text-gray-500">Integrated setup for simulation analyses, corners, sweeps, and run folders.</p>
+              <p class="text-xs text-gray-500">Integrated analyses, corners, sweeps, KLU selection, adaptive RAW point saving, and local or SSH remote runs.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
               <div class="text-sm font-semibold text-white mb-1">Waveform Viewer</div>
@@ -211,8 +211,8 @@
               <p class="text-xs text-gray-500">Parameterized devices, schematic/device correspondence, DRC/LVS flow, and GDS export.</p>
             </div>
             <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
-              <div class="text-sm font-semibold text-white mb-1">Netlist Bridge</div>
-              <p class="text-xs text-gray-500">SPICE netlist generation and direct GSPICE simulator bridge for seamless simulation.</p>
+              <div class="text-sm font-semibold text-white mb-1">GSPICE Bridge</div>
+              <p class="text-xs text-gray-500">SPICE netlist generation with direct local execution or wrapper-based remote SSH simulation.</p>
             </div>
           </div>
         </div>
@@ -234,11 +234,11 @@
         </div>
         <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
           <div class="text-sm font-semibold text-white mb-1">SuiteSparse/KLU</div>
-          <p class="text-xs text-gray-500">Industry gold-standard sparse solver for large circuit simulations.</p>
+          <p class="text-xs text-gray-500">KLU-enabled builds through SuiteSparse/vcpkg and cockpit-level solver selection.</p>
         </div>
         <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
-          <div class="text-sm font-semibold text-white mb-1">OSDI / Verilog-A</div>
-          <p class="text-xs text-gray-500">Native host for BSIM4, PSP, HICUM compact models.</p>
+          <div class="text-sm font-semibold text-white mb-1">Compact Model Core</div>
+          <p class="text-xs text-gray-500">Native registry for independent compact-device implementations.</p>
         </div>
         <div class="border border-gray-800/60 rounded-xl p-4 card-hover">
           <div class="text-sm font-semibold text-white mb-1">Python GUI</div>
@@ -282,13 +282,13 @@
               <div>
                 <div class="text-sm font-semibold text-white mb-2">Windows</div>
                 <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
-                  <li>Recommended prerequisites: Git for Windows, CMake, Python 3, and Visual Studio Build Tools with the C++ workload.</li>
+                  <li>Recommended prerequisites: Git for Windows, CMake, Python 3, and Visual Studio Build Tools with the C++ workload. The installer also bootstraps vcpkg for the KLU-enabled GSPICE build.</li>
                   <li>Download <code class="text-gray-400">install-windows.ps1</code> using the button on the right.</li>
                   <li>Open PowerShell in the download folder.</li>
                   <li>Run the installer command below. It prints <code class="text-gray-400">[OK]</code> or <code class="text-gray-400">[MISSING]</code> for each prerequisite and asks before installing anything missing with <code class="text-gray-400">winget</code>.</li>
-                  <li>After prerequisites pass, it clones Lumen and GSPICE, builds GSPICE, and prepares the Lumen Python environment.</li>
+                  <li>After prerequisites pass, it updates Lumen and GSPICE from GitHub <code class="text-gray-400">main</code>, builds GSPICE with SuiteSparse/KLU through vcpkg, and prepares the Lumen Python environment.</li>
                   <li>When it finishes, start Lumen with the launch command shown below.</li>
-                  <li>After Lumen opens, configure GSPICE and the PDK using the setup steps below.</li>
+                  <li>After Lumen opens, configure GSPICE, KLU, internal-point saving, remote SSH if needed, and the PDK using the setup steps below.</li>
                 </ol>
                 <div class="text-xs font-semibold text-cyan-400 mb-2">Run installer</div>
                 <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">powershell -ExecutionPolicy Bypass -File .\install-windows.ps1</pre>
@@ -306,12 +306,12 @@ $env:QT_QPA_PLATFORM = "windows"
               <div>
                 <div class="text-sm font-semibold text-white mb-2">macOS</div>
                 <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
-                  <li>Recommended prerequisites: Xcode Command Line Tools, CMake, Git, and Python 3.</li>
+                  <li>Recommended prerequisites: Xcode Command Line Tools, CMake, Git, Python 3, Homebrew, and SuiteSparse.</li>
                   <li>Download <code class="text-gray-400">install-macos.sh</code> using the button on the right.</li>
                   <li>Open Terminal in the download folder.</li>
                   <li>Run the two commands below. The script prints <code class="text-gray-400">[OK]</code> or <code class="text-gray-400">[MISSING]</code> for each prerequisite and asks before installing anything missing with Xcode tools/Homebrew.</li>
-                  <li>After prerequisites pass, it clones both projects, builds GSPICE, and creates Lumen's Python environment.</li>
-                  <li>After Lumen opens, configure GSPICE and the PDK using the setup steps below.</li>
+                  <li>After prerequisites pass, it updates both projects from GitHub <code class="text-gray-400">main</code>, builds GSPICE with SuiteSparse/KLU, and creates Lumen's Python environment.</li>
+                  <li>After Lumen opens, configure GSPICE, KLU, internal-point saving, remote SSH if needed, and the PDK using the setup steps below.</li>
                 </ol>
                 <div class="text-xs font-semibold text-teal-400 mb-2">Run installer</div>
                 <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">chmod +x install-macos.sh
@@ -331,13 +331,13 @@ python -m lumen</pre>
               <div>
                 <div class="text-sm font-semibold text-white mb-2">Linux</div>
                 <ol class="text-xs text-gray-500 space-y-2 list-decimal list-inside mb-4">
-                  <li>Recommended prerequisites: Git, CMake, Python 3, python3-venv, and a C++17 compiler.</li>
+                  <li>Recommended prerequisites: Git, CMake, Python 3, python3-venv, a C++17 compiler, and SuiteSparse/KLU development headers.</li>
                   <li>Download <code class="text-gray-400">install-linux.sh</code> using the button on the right.</li>
                   <li>Open a terminal in the download folder.</li>
                   <li>Run the two commands below. The script prints <code class="text-gray-400">[OK]</code> or <code class="text-gray-400">[MISSING]</code> for each prerequisite and asks before installing anything missing with apt, dnf, or pacman.</li>
-                  <li>After prerequisites pass, it clones both repositories, builds GSPICE, and prepares Lumen.</li>
+                  <li>After prerequisites pass, it updates both repositories from GitHub <code class="text-gray-400">main</code>, builds GSPICE with SuiteSparse/KLU, and prepares Lumen.</li>
                   <li>Start Lumen with the launch command shown below.</li>
-                  <li>After Lumen opens, configure GSPICE and the PDK using the setup steps below.</li>
+                  <li>After Lumen opens, configure GSPICE, KLU, internal-point saving, remote SSH if needed, and the PDK using the setup steps below.</li>
                 </ol>
                 <div class="text-xs font-semibold text-cyan-400 mb-2">Run installer</div>
                 <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">chmod +x install-linux.sh
@@ -362,19 +362,19 @@ python -m lumen</pre>
             <li>Select the <span class="text-gray-300">GSPICE</span> row.</li>
             <li>Click <span class="text-gray-300">Locate Executable...</span>.</li>
             <li>Browse to the GSPICE executable built by the installer.</li>
-            <li>Confirm the status changes to <span class="text-gray-300">Found</span>.</li>
+            <li>Confirm the status changes to <span class="text-gray-300">Found + KLU</span> when the KLU-enabled build is selected, or <span class="text-gray-300">Found</span> for a non-KLU build.</li>
           </ol>
           <div class="text-xs font-semibold text-cyan-400 mt-4 mb-2">Default GSPICE paths</div>
           <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">Windows:
-$HOME\lumen-gspice\GSPICE\build-vs2022\Release\gspice.exe
+$HOME\lumen-gspice\GSPICE\build-vcpkg\Release\gspice.exe
 
 macOS:
 $HOME/lumen-gspice/GSPICE/build/gspice
 
 Linux:
 $HOME/lumen-gspice/GSPICE/build/gspice</pre>
-          <p class="mt-3">If Windows was built from a Developer PowerShell instead, also check <code class="text-gray-400">GSPICE\build\Release\gspice.exe</code>.</p>
-          <p class="mt-2">If CMake reports <code class="text-gray-400">nmake</code> is missing, download the latest Windows installer from this page and rerun it. The updated script uses a Visual Studio build folder named <code class="text-gray-400">build-vs2022</code>.</p>
+          <p class="mt-3">The Windows installer uses vcpkg manifest mode and creates <code class="text-gray-400">build-vcpkg</code>. If you build manually without vcpkg, Lumen can still run GSPICE, but the cockpit KLU toggle will fall back to the available solver.</p>
+          <p class="mt-2">To verify the selected binary, run <code class="text-gray-400">gspice --capabilities</code> and check for the SuiteSparse/KLU backend.</p>
         </div>
 
         <div class="border border-gray-800/60 rounded-xl p-5 text-xs text-gray-500">
@@ -392,7 +392,7 @@ $HOME/lumen-gspice/GSPICE/build/gspice</pre>
 
       <div class="border border-gray-800/60 rounded-xl p-5 text-xs text-gray-500">
         <div class="text-sm font-semibold text-white mb-2">First simulation check</div>
-        <p>After adding GSPICE and activating a PDK, create or open a small RC schematic, open the simulation environment, choose a transient analysis, run GSPICE, and open the RAW or CSV result in SigView. That verifies the schematic-to-simulator-to-waveform path.</p>
+        <p>After adding GSPICE and activating a PDK, create or open a small RC schematic, open the Simulation Cockpit, choose a transient analysis, keep <span class="text-gray-300">KLU</span> and <span class="text-gray-300">Save internal points</span> enabled for the first run, then open the RAW result in SigView. For remote runs, select <span class="text-gray-300">Remote (SSH)</span>, enter host/user/key details, and Lumen will use the GSPICE SSH wrapper instead of the deprecated direct <code class="text-gray-400">--sim-env</code> mode.</p>
       </div>
 
       <details class="mt-6 border border-gray-800/60 rounded-xl p-5">
@@ -400,8 +400,9 @@ $HOME/lumen-gspice/GSPICE/build/gspice</pre>
         <div class="grid lg:grid-cols-2 gap-4 mt-4">
           <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">git clone https://github.com/hegdeshreesha/GSPICE.git
 cd GSPICE
-cmake -S . -B build
+cmake -S . -B build -DGSPICE_ENABLE_KLU=ON -DGSPICE_REQUIRE_KLU=ON
 cmake --build build --config Release
+build/gspice --capabilities
 ctest --test-dir build -C Release --output-on-failure</pre>
           <pre class="bg-[#080f1a] border border-gray-800/60 rounded-lg p-4 text-xs text-gray-500 leading-relaxed">git clone https://github.com/hegdeshreesha/Lumen_Circuit_Studio.git
 cd Lumen_Circuit_Studio
@@ -430,13 +431,13 @@ python -m lumen</pre>
       <h2 class="text-2xl font-bold text-white mb-6">Development roadmap</h2>
       <div class="space-y-6">
         <div class="border-l-2 border-cyan-500 pl-5">
-          <div class="text-xs font-semibold text-cyan-400 mb-1">v1.3 &mdash; Jul 2026 <span class="text-teal-400 ml-2">Current</span></div>
-          <div class="text-sm font-semibold text-white mb-2">Academic Beta</div>
+          <div class="text-xs font-semibold text-cyan-400 mb-1">v1.3 &mdash; Aug 2026 <span class="text-teal-400 ml-2">Current</span></div>
+          <div class="text-sm font-semibold text-white mb-2">GSDI/GMC Academic Beta</div>
           <ul class="text-xs text-gray-500 space-y-1">
-            <li>RC transient verified against analytic reference results</li>
-            <li>PSP103.4 inverter validation</li>
-            <li>OSDI compact-model loading</li>
-            <li>KLU solver bridge</li>
+            <li>Native GSDI/GMC compact-model path for PSP and BSIM bring-up</li>
+            <li>IHP-oriented AC, DC, transient, OP RAW, and noise smoke coverage</li>
+            <li>Simulation Cockpit KLU toggle and adaptive internal-point RAW output</li>
+            <li>Remote SSH simulation through the maintained wrapper path</li>
           </ul>
         </div>
         <div class="border-l-2 border-gray-800 pl-5">
@@ -454,7 +455,7 @@ python -m lumen</pre>
           <div class="text-sm font-semibold text-white mb-2">RF &amp; Mixed-Signal</div>
           <ul class="text-xs text-gray-500 space-y-1">
             <li>Envelope following analysis</li>
-            <li>Verilog-A/AMS co-simulation</li>
+            <li>Native compact-model coverage</li>
             <li>Transient noise</li>
             <li>PSS/PAC/PNOISE production ready</li>
           </ul>

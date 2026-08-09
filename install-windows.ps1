@@ -49,6 +49,20 @@ function Clone-Or-Update($Url, $Path) {
     }
 }
 
+function Ensure-Vcpkg($Root) {
+    $vcpkg = Join-Path $Root "vcpkg"
+    if (-not (Test-Path -LiteralPath $vcpkg)) {
+        git clone https://github.com/microsoft/vcpkg.git $vcpkg
+    } else {
+        git -C $vcpkg pull --ff-only
+    }
+    $exe = Join-Path $vcpkg "vcpkg.exe"
+    if (-not (Test-Path -LiteralPath $exe)) {
+        & (Join-Path $vcpkg "bootstrap-vcpkg.bat")
+    }
+    return $vcpkg
+}
+
 Write-Host "Checking prerequisites..."
 $checks = [ordered]@{
     "Git" = Test-Command git
@@ -88,12 +102,25 @@ Clone-Or-Update "https://github.com/hegdeshreesha/Lumen_Circuit_Studio.git" $lum
 
 $vsInstall = Get-VsInstall
 if ($vsInstall) {
-    $gspiceBuild = Join-Path $gspice "build-vs2022"
-    $cmakeArgs = @("-S", $gspice, "-B", $gspiceBuild, "-G", "Visual Studio 17 2022", "-A", "x64")
+    $vcpkgRoot = Ensure-Vcpkg $InstallRoot
+    $env:VCPKG_ROOT = $vcpkgRoot
+    $gspiceBuild = Join-Path $gspice "build-vcpkg"
+    $toolchain = Join-Path $vcpkgRoot "scripts\buildsystems\vcpkg.cmake"
+    $cmakeArgs = @(
+        "-S", $gspice,
+        "-B", $gspiceBuild,
+        "-G", "Visual Studio 17 2022",
+        "-A", "x64",
+        "-DCMAKE_TOOLCHAIN_FILE=$toolchain",
+        "-DVCPKG_TARGET_TRIPLET=x64-windows",
+        "-DVCPKG_MANIFEST_MODE=ON",
+        "-DGSPICE_ENABLE_KLU=ON",
+        "-DGSPICE_REQUIRE_KLU=ON"
+    )
     $gspiceExe = Join-Path $gspiceBuild "Release\gspice.exe"
 } elseif ((Test-Command cl) -and (Test-Command nmake)) {
     $gspiceBuild = Join-Path $gspice "build-nmake"
-    $cmakeArgs = @("-S", $gspice, "-B", $gspiceBuild, "-G", "NMake Makefiles")
+    $cmakeArgs = @("-S", $gspice, "-B", $gspiceBuild, "-G", "NMake Makefiles", "-DGSPICE_ENABLE_KLU=ON")
     $gspiceExe = Join-Path $gspiceBuild "gspice.exe"
 } else {
     throw "No usable C++ build environment found. Install Visual Studio Build Tools with the C++ workload, open a new PowerShell window, and rerun this script."
@@ -110,6 +137,8 @@ Write-Host ""
 Write-Host "GSPICE built in: $gspice"
 Write-Host "GSPICE executable:"
 Write-Host "  $gspiceExe"
+Write-Host "GSPICE capabilities:"
+& $gspiceExe --capabilities
 Write-Host "Lumen installed in: $lumen"
 Write-Host "Start Lumen with:"
 Write-Host "  cd $lumen"
