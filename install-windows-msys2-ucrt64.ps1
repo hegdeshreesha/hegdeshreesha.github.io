@@ -29,10 +29,26 @@ function Get-PythonCommand {
 }
 
 function Get-MsysBash {
-    $candidate = Join-Path $MsysRoot "usr\bin\bash.exe"
-    if (Test-Path -LiteralPath $candidate) { return $candidate }
-    $fromPath = Get-Command bash.exe -ErrorAction SilentlyContinue
-    if ($fromPath) { return $fromPath.Source }
+    $roots = @(
+        $MsysRoot,
+        "C:\msys64",
+        "$env:LOCALAPPDATA\Programs\MSYS2",
+        "$env:ProgramFiles\MSYS2"
+    ) | Where-Object { $_ }
+
+    foreach ($root in $roots) {
+        $bash = Join-Path $root "usr\bin\bash.exe"
+        $pacman = Join-Path $root "usr\bin\pacman.exe"
+        $ucrt = Join-Path $root "ucrt64\bin"
+        if (
+            (Test-Path -LiteralPath $bash) -and
+            (Test-Path -LiteralPath $pacman) -and
+            (Test-Path -LiteralPath $ucrt)
+        ) {
+            $script:MsysRoot = $root
+            return $bash
+        }
+    }
     return ""
 }
 
@@ -85,7 +101,7 @@ if ($missing.Count) {
 
 $bash = Get-MsysBash
 if (-not $bash) {
-    throw "MSYS2 bash was not found after install. Open a new PowerShell window and rerun this script."
+    throw "MSYS2 UCRT64 was not found. If MSYS2 was just installed, open a new PowerShell window and rerun this script. Do not run it from WSL."
 }
 $python = Get-PythonCommand
 if (-not $python) {
