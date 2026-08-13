@@ -6,7 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$InstallerVersion = "2026-08-12.3"
+$InstallerVersion = "2026-08-12.4"
 
 function Test-Command($Name) {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
@@ -69,9 +69,22 @@ function Invoke-Msys {
         throw "Refusing to use WSL bash: $resolved. Install MSYS2 UCRT64 or pass -MsysRoot C:\msys64."
     }
     Write-Host "Using MSYS2 bash: $resolved"
-    & $Bash -lc $Script
-    if ($LASTEXITCODE -ne 0) {
-        throw "MSYS2 command failed with exit code $LASTEXITCODE."
+    $scriptPath = Join-Path ([System.IO.Path]::GetTempPath()) ("lumen-gspice-msys2-{0}.sh" -f ([guid]::NewGuid().ToString("N")))
+    try {
+        $utf8NoBom = New-Object System.Text.UTF8Encoding($false)
+        [System.IO.File]::WriteAllText($scriptPath, $Script.Replace("`r`n", "`n"), $utf8NoBom)
+        & $Bash $scriptPath
+        if ($LASTEXITCODE -ne 0) {
+            throw "MSYS2 command failed with exit code $LASTEXITCODE. Script: $scriptPath"
+        }
+    } catch {
+        if (Test-Path -LiteralPath $scriptPath) {
+            Write-Host "Temporary MSYS2 script kept for debugging: $scriptPath" -ForegroundColor Yellow
+        }
+        throw
+    }
+    if (Test-Path -LiteralPath $scriptPath) {
+        Remove-Item -LiteralPath $scriptPath -Force
     }
 }
 
