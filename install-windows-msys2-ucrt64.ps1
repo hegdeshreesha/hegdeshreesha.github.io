@@ -6,7 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$InstallerVersion = "2026-08-12.2"
+$InstallerVersion = "2026-08-12.3"
 
 function Test-Command($Name) {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
@@ -142,6 +142,8 @@ pacman -S --needed --noconfirm \
 
 INSTALL_ROOT=`$(cygpath -u "`$LUMEN_INSTALL_ROOT_WIN")
 mkdir -p "`$INSTALL_ROOT"
+LOG_DIR="`$INSTALL_ROOT/logs"
+mkdir -p "`$LOG_DIR"
 GSPICE="`$INSTALL_ROOT/GSPICE"
 if [ -d "`$GSPICE/.git" ]; then
   git -C "`$GSPICE" pull --ff-only
@@ -149,12 +151,39 @@ else
   git clone https://github.com/hegdeshreesha/GSPICE.git "`$GSPICE"
 fi
 
+CONFIG_LOG="`$LOG_DIR/gspice-configure-msys2-ucrt64.log"
+BUILD_LOG="`$LOG_DIR/gspice-build-msys2-ucrt64.log"
+
+set +e
 cmake -S "`$GSPICE" -B "`$GSPICE/build-msys2-ucrt64" \
   -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   -DGSPICE_ENABLE_KLU=ON \
-  -DGSPICE_REQUIRE_KLU=ON
-cmake --build "`$GSPICE/build-msys2-ucrt64" --parallel 2
+  -DGSPICE_REQUIRE_KLU=ON 2>&1 | tee "`$CONFIG_LOG"
+status=`${PIPESTATUS[0]}
+set -e
+if [ "`$status" -ne 0 ]; then
+  echo
+  echo "GSPICE configure failed. Last log lines:"
+  tail -n 80 "`$CONFIG_LOG" || true
+  exit "`$status"
+fi
+
+set +e
+cmake --build "`$GSPICE/build-msys2-ucrt64" --target gspice --parallel 2 --verbose 2>&1 | tee "`$BUILD_LOG"
+status=`${PIPESTATUS[0]}
+set -e
+if [ "`$status" -ne 0 ]; then
+  echo
+  echo "GSPICE build failed. Last log lines:"
+  tail -n 120 "`$BUILD_LOG" || true
+  exit "`$status"
+fi
+
+if [ ! -x "`$GSPICE/build-msys2-ucrt64/gspice.exe" ]; then
+  echo "GSPICE build finished but executable was not found: `$GSPICE/build-msys2-ucrt64/gspice.exe"
+  exit 1
+fi
 "@
 
 Write-Host "Installing MSYS2 UCRT64 packages and building GSPICE..."
