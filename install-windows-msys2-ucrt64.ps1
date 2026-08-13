@@ -6,6 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
+$InstallerVersion = "2026-08-12.2"
 
 function Test-Command($Name) {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
@@ -29,12 +30,18 @@ function Get-PythonCommand {
 }
 
 function Get-MsysBash {
-    $roots = @(
-        $MsysRoot,
-        "C:\msys64",
-        "$env:LOCALAPPDATA\Programs\MSYS2",
-        "$env:ProgramFiles\MSYS2"
-    ) | Where-Object { $_ }
+    $roots = New-Object System.Collections.Generic.List[string]
+    foreach ($root in @($MsysRoot, "C:\msys64")) {
+        if ($root -and -not $roots.Contains($root)) { $roots.Add($root) }
+    }
+    if ($env:LOCALAPPDATA) {
+        $root = Join-Path $env:LOCALAPPDATA "Programs\MSYS2"
+        if (-not $roots.Contains($root)) { $roots.Add($root) }
+    }
+    if ($env:ProgramFiles) {
+        $root = Join-Path $env:ProgramFiles "MSYS2"
+        if (-not $roots.Contains($root)) { $roots.Add($root) }
+    }
 
     foreach ($root in $roots) {
         $bash = Join-Path $root "usr\bin\bash.exe"
@@ -57,12 +64,18 @@ function Invoke-Msys {
         [string]$Bash,
         [string]$Script
     )
+    $resolved = (Resolve-Path -LiteralPath $Bash).Path
+    if ($resolved -match "\\Windows\\System32\\" -or $resolved -match "\\WindowsApps\\" -or $resolved -match "\\wsl") {
+        throw "Refusing to use WSL bash: $resolved. Install MSYS2 UCRT64 or pass -MsysRoot C:\msys64."
+    }
+    Write-Host "Using MSYS2 bash: $resolved"
     & $Bash -lc $Script
     if ($LASTEXITCODE -ne 0) {
         throw "MSYS2 command failed with exit code $LASTEXITCODE."
     }
 }
 
+Write-Host "Lumen/GSPICE MSYS2 UCRT64 installer $InstallerVersion"
 Write-Host "Checking lightweight Windows prerequisites..."
 $bash = Get-MsysBash
 $python = Get-PythonCommand
@@ -103,6 +116,7 @@ $bash = Get-MsysBash
 if (-not $bash) {
     throw "MSYS2 UCRT64 was not found. If MSYS2 was just installed, open a new PowerShell window and rerun this script. Do not run it from WSL."
 }
+Write-Host "MSYS2 root: $MsysRoot"
 $python = Get-PythonCommand
 if (-not $python) {
     throw "Windows Python was not found after install. Open a new PowerShell window and rerun this script."
