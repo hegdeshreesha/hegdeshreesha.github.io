@@ -6,7 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$InstallerVersion = "2026-08-12.4"
+$InstallerVersion = "2026-08-13.1"
 
 function Test-Command($Name) {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
@@ -144,28 +144,57 @@ export MSYSTEM=UCRT64
 export CHERE_INVOKING=1
 export PATH=/ucrt64/bin:/usr/bin:`$PATH
 
-pacman -Syuu --needed --noconfirm || true
-pacman -Syuu --needed --noconfirm
-pacman -S --needed --noconfirm \
-  git \
-  mingw-w64-ucrt-x86_64-cmake \
-  mingw-w64-ucrt-x86_64-ninja \
-  mingw-w64-ucrt-x86_64-gcc \
-  mingw-w64-ucrt-x86_64-suitesparse
-
 INSTALL_ROOT=`$(cygpath -u "`$LUMEN_INSTALL_ROOT_WIN")
 mkdir -p "`$INSTALL_ROOT"
 LOG_DIR="`$INSTALL_ROOT/logs"
 mkdir -p "`$LOG_DIR"
-GSPICE="`$INSTALL_ROOT/GSPICE"
-if [ -d "`$GSPICE/.git" ]; then
-  git -C "`$GSPICE" pull --ff-only
-else
-  git clone https://github.com/hegdeshreesha/GSPICE.git "`$GSPICE"
-fi
-
+PACMAN_LOG="`$LOG_DIR/msys2-pacman-ucrt64.log"
+CLONE_LOG="`$LOG_DIR/gspice-clone-msys2-ucrt64.log"
 CONFIG_LOG="`$LOG_DIR/gspice-configure-msys2-ucrt64.log"
 BUILD_LOG="`$LOG_DIR/gspice-build-msys2-ucrt64.log"
+
+echo "MSYS2 shell: `$SHELL" | tee "`$PACMAN_LOG"
+echo "MSYSTEM: `$MSYSTEM" | tee -a "`$PACMAN_LOG"
+echo "PATH: `$PATH" | tee -a "`$PACMAN_LOG"
+
+set +e
+pacman -Syu --needed --noconfirm \
+  git \
+  mingw-w64-ucrt-x86_64-cmake \
+  mingw-w64-ucrt-x86_64-ninja \
+  mingw-w64-ucrt-x86_64-gcc \
+  mingw-w64-ucrt-x86_64-suitesparse 2>&1 | tee -a "`$PACMAN_LOG"
+status=`${PIPESTATUS[0]}
+set -e
+if [ "`$status" -ne 0 ]; then
+  echo
+  echo "MSYS2 package install/update failed. Last log lines:"
+  tail -n 120 "`$PACMAN_LOG" || true
+  exit "`$status"
+fi
+
+for tool in git cmake ninja g++; do
+  if ! command -v "`$tool" >/dev/null 2>&1; then
+    echo "Required MSYS2 tool not found after package install: `$tool" | tee -a "`$PACMAN_LOG"
+    exit 1
+  fi
+done
+
+GSPICE="`$INSTALL_ROOT/GSPICE"
+set +e
+if [ -d "`$GSPICE/.git" ]; then
+  git -C "`$GSPICE" pull --ff-only 2>&1 | tee "`$CLONE_LOG"
+else
+  git clone https://github.com/hegdeshreesha/GSPICE.git "`$GSPICE" 2>&1 | tee "`$CLONE_LOG"
+fi
+status=`${PIPESTATUS[0]}
+set -e
+if [ "`$status" -ne 0 ]; then
+  echo
+  echo "GSPICE clone/update failed. Last log lines:"
+  tail -n 120 "`$CLONE_LOG" || true
+  exit "`$status"
+fi
 
 set +e
 cmake -S "`$GSPICE" -B "`$GSPICE/build-msys2-ucrt64" \
