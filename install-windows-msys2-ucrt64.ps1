@@ -6,7 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$InstallerVersion = "2026-08-13.2"
+$InstallerVersion = "2026-08-13.3"
 
 function Test-Command($Name) {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
@@ -195,6 +195,8 @@ if [ "`$status" -ne 0 ]; then
   echo "MSYS2 Python is not healthy after clearing inherited Python environment variables." | tee -a "`$PACMAN_LOG"
   exit 1
 fi
+MSYS2_PYTHON=`$(command -v python)
+echo "Using MSYS2 Python for CMake/GMC: `$MSYS2_PYTHON" | tee -a "`$PACMAN_LOG"
 
 GSPICE="`$INSTALL_ROOT/GSPICE"
 set +e
@@ -212,12 +214,19 @@ if [ "`$status" -ne 0 ]; then
   exit "`$status"
 fi
 
+if [ -d "`$GSPICE/build-msys2-ucrt64" ]; then
+  rm -f "`$GSPICE/build-msys2-ucrt64/CMakeCache.txt"
+fi
+
 set +e
 cmake -S "`$GSPICE" -B "`$GSPICE/build-msys2-ucrt64" \
   -G Ninja \
   -DCMAKE_BUILD_TYPE=Release \
   -DGSPICE_ENABLE_KLU=ON \
-  -DGSPICE_REQUIRE_KLU=ON 2>&1 | tee "`$CONFIG_LOG"
+  -DGSPICE_REQUIRE_KLU=ON \
+  -DGSPICE_PYTHON="`$MSYS2_PYTHON" \
+  -DPython_EXECUTABLE="`$MSYS2_PYTHON" \
+  -DPython3_EXECUTABLE="`$MSYS2_PYTHON" 2>&1 | tee "`$CONFIG_LOG"
 status=`${PIPESTATUS[0]}
 set -e
 if [ "`$status" -ne 0 ]; then
