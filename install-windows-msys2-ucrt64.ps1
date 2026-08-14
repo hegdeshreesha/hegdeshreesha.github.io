@@ -6,7 +6,7 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$InstallerVersion = "2026-08-13.1"
+$InstallerVersion = "2026-08-13.2"
 
 function Test-Command($Name) {
     return [bool](Get-Command $Name -ErrorAction SilentlyContinue)
@@ -143,6 +143,13 @@ set -euo pipefail
 export MSYSTEM=UCRT64
 export CHERE_INVOKING=1
 export PATH=/ucrt64/bin:/usr/bin:`$PATH
+unset PYTHONHOME
+unset PYTHONPATH
+unset PYTHONPLATLIBDIR
+unset PYTHONSTARTUP
+unset VIRTUAL_ENV
+unset CONDA_PREFIX
+unset CONDA_DEFAULT_ENV
 
 INSTALL_ROOT=`$(cygpath -u "`$LUMEN_INSTALL_ROOT_WIN")
 mkdir -p "`$INSTALL_ROOT"
@@ -163,6 +170,7 @@ pacman -Syu --needed --noconfirm \
   mingw-w64-ucrt-x86_64-cmake \
   mingw-w64-ucrt-x86_64-ninja \
   mingw-w64-ucrt-x86_64-gcc \
+  mingw-w64-ucrt-x86_64-python \
   mingw-w64-ucrt-x86_64-suitesparse 2>&1 | tee -a "`$PACMAN_LOG"
 status=`${PIPESTATUS[0]}
 set -e
@@ -173,12 +181,20 @@ if [ "`$status" -ne 0 ]; then
   exit "`$status"
 fi
 
-for tool in git cmake ninja g++; do
+for tool in git cmake ninja g++ python; do
   if ! command -v "`$tool" >/dev/null 2>&1; then
     echo "Required MSYS2 tool not found after package install: `$tool" | tee -a "`$PACMAN_LOG"
     exit 1
   fi
 done
+set +e
+python -c "import encodings, sys; print(sys.executable)" 2>&1 | tee -a "`$PACMAN_LOG"
+status=`${PIPESTATUS[0]}
+set -e
+if [ "`$status" -ne 0 ]; then
+  echo "MSYS2 Python is not healthy after clearing inherited Python environment variables." | tee -a "`$PACMAN_LOG"
+  exit 1
+fi
 
 GSPICE="`$INSTALL_ROOT/GSPICE"
 set +e
